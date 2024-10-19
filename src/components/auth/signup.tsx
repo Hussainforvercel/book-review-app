@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "./AuthContext";
 
 const Register: React.FC = () => {
   const [name, setName] = useState("");
@@ -18,6 +19,7 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { setIsLoggedIn } = useAuth();
 
   interface RegisterResponse {
     token: string;
@@ -37,6 +39,8 @@ const Register: React.FC = () => {
 
       const { token } = response.data;
       localStorage.setItem("authToken", token);
+
+      setIsLoggedIn(true);
 
       toast.success("Registration successful! Redirecting...", {
         position: "top-right",

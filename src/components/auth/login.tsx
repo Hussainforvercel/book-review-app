@@ -10,17 +10,19 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { useAuth } from "./AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
+interface LoginResponse {
+  token: string;
+}
 
-  interface LoginResponse {
-    token: string;
-  }
+const Login: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const { setIsLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     setIsSubmitting(true);
@@ -35,6 +37,7 @@ const Login: React.FC = () => {
 
       const { token } = response.data;
       localStorage.setItem("authToken", token);
+      setIsLoggedIn(true);
 
       toast.success("Login successful!", {
         position: "top-right",
